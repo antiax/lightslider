@@ -1,0 +1,123 @@
+<html>
+<head>
+
+  <title>Light Slider</title>
+
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <script src="//code.jquery.com/jquery-1.12.1.js"></script>
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="slider">
+        <section class="slides-container">
+            <article id="slide-1" class="slide">
+                <div class="numbertext"><h3>1 / 4</h3></div>
+                <img src="images/image1.jpg">
+                <div class="text"><h3>Caption One</h3></div>
+            </article>
+
+            <article id="slide-2" class="slide">
+                <div class="numbertext"><h3>2 / 4</h3></div>
+                <img src="images/image2.jpg">
+                <div class="text"><h3>Caption Two</h3></div>
+            </article>
+
+            <article id="slide-3" class="slide">
+                <div class="numbertext"><h3>3 / 4</h3></div>
+                <img src="images/image3.jpg">
+                <div class="text"><h3>Caption Three</h3></div>
+            </article>
+
+            <article id="slide-4" class="slide">
+                <div class="numbertext"><h3>4 / 4</h3></div>
+                <img src="images/image4.jpg">
+                <div class="text"><h3>Caption Four</h3></div>
+            </article>
+
+            <a class="prev">&#10094;</a>
+            <a class="next">&#10095;</a>
+        </section>
+        <footer>
+           <span id="dot-1" class="dot"></span>
+           <span id="dot-2" class="dot"></span>
+           <span id="dot-3" class="dot"></span>
+           <span id="dot-4" class="dot"></span>
+        </footer>
+    </div>
+</div>
+<script>
+// start slider
+var sliderLen = 4;
+var sliderIndex = 1;
+var sliderTimer = 3; // seconds
+var animationTime = 1000; // milliseconds
+$(function(){
+    //$(".slides-container").css("height", $(".slide").height());
+    //$( window ).resize(function() {
+    //    $(".slides-container").css("height", $(".slide").height());
+    //});
+    $(".slide").css("display", "none");
+    $( ".dot" ).removeClass( "active" );
+    $("#slide-1").css("display", "block");
+    $("#dot-1").addClass("active");
+});
+
+var dotHandler = function (){
+    clearInterval( animationSlider );
+    i = $(this).attr('id').split('-')[1];
+    if ( i < sliderIndex ){
+        sliderPrevious ( i );
+    } else if ( i > sliderIndex ) {
+        sliderNext ( i );
+    }
+}
+var prevHandler = function (){
+    clearInterval( animationSlider );
+    sliderPrevious(sliderIndex - 1);
+}
+var nextHandler = function (){
+    clearInterval( animationSlider );
+    sliderNext(sliderIndex + 1);    
+}
+$(".dot").on("click", dotHandler);
+$(".prev").on("click", prevHandler);
+$(".next").on("click", nextHandler);
+
+animationSlider = setInterval(function() {
+        sliderNext(sliderIndex + 1);
+    }, sliderTimer * 1000);
+
+function sliderNext( n ){
+    if (n > sliderLen){
+        n = 1;
+    }
+    $( ".dot" ).removeClass( "active" );
+    $("#dot-" + n).addClass("active");
+    $(".dot, .prev, .next").unbind("click");
+    $( "#slide-" + sliderIndex ).hide("slide", { direction: "left" }, animationTime);
+    $( "#slide-" + n ).show("slide", { direction: "right" }, animationTime, function () { 
+        sliderIndex = n; 
+        $(".dot").bind("click", dotHandler);
+        $(".prev").on("click", prevHandler);
+        $(".next").on("click", nextHandler);
+    });
+}
+function sliderPrevious( n ) {
+    if (n < 1){
+        n = sliderLen;
+    }
+    $( ".dot" ).removeClass( "active" );
+    $("#dot-" + n).addClass("active");
+    $(".dot, .prev, .next").unbind("click");
+    $( "#slide-" + sliderIndex ).hide("slide", { direction: "right" }, animationTime);
+    $( "#slide-" + n ).show("slide", { direction: "left" }, animationTime, function () { 
+        sliderIndex = n; 
+        $(".dot").bind("click", dotHandler);
+        $(".prev").on("click", prevHandler);
+        $(".next").on("click", nextHandler);
+    });
+}
+</script>
+</body>
+</html>
